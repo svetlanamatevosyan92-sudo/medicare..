@@ -1,0 +1,25 @@
+# Собирает APK в облаке GitHub. Запуск: вкладка Actions -> "Сборка APK" -> Run workflow.
+name: Сборка APK
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Скачать код
+        uses: actions/checkout@v4
+
+      - name: Собрать APK (Buildozer)
+        uses: ArtemSBulgakov/buildozer-action@v1
+        id: buildozer
+        with:
+          command: buildozer android debug
+          buildozer_version: stable
+
+      - name: Сохранить APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: medicare-apk
+          path: ${{ steps.buildozer.outputs.filename }}
