@@ -1,0 +1,1524 @@
+#:import NoTransition kivy.uix.screenmanager.NoTransition
+#:import dp kivy.metrics.dp
+
+# =====================================================================
+#  Базовые стили
+# =====================================================================
+<TxtL@MDLabel>:
+    theme_text_color: "Custom"
+    text_color: app.c_text
+    adaptive_height: True
+
+<SubL@MDLabel>:
+    theme_text_color: "Custom"
+    text_color: app.c_sub
+    adaptive_height: True
+
+<Ico@MDIcon>:
+    size_hint: None, None
+    text_size: self.size
+    halign: "center"
+    valign: "middle"
+    theme_text_color: "Custom"
+    text_color: app.c_text
+
+<Btn@MDFillRoundFlatButton>:
+    md_bg_color: app.c_primary
+    theme_text_color: "Custom"
+    text_color: app.c_on_primary
+    size_hint: 1, None
+    height: dp(54)
+    font_size: "15sp"
+
+<BtnSoft@Btn>:
+    md_bg_color: app.c_soft
+    text_color: app.c_text
+    height: dp(48)
+
+<BtnAccent@Btn>:
+    md_bg_color: app.c_accent
+    text_color: app.c_on_primary
+
+<BtnDanger@Btn>:
+    md_bg_color: app.c_err
+    text_color: app.c_on_primary
+    height: dp(48)
+
+<F@MDTextField>:
+    mode: "fill"
+    radius: [dp(12), dp(12), dp(12), dp(12)]
+    size_hint_y: None
+    height: dp(56)
+    fill_color_normal: app.c_card
+    fill_color_focus: app.c_card
+    text_color_normal: app.c_text
+    text_color_focus: app.c_text
+    hint_text_color_normal: app.c_sub
+    hint_text_color_focus: app.c_accent
+    line_color_normal: app.c_line
+    line_color_focus: app.c_accent
+
+<FieldL@SubL>:
+    font_style: "Caption"
+    bold: True
+
+<Scr@MDScreen>:
+    canvas.before:
+        Color:
+            rgba: 1, 1, 1, 1
+        Rectangle:
+            texture: app.grad_tex
+            pos: 0, 0
+            size: self.size
+
+<Divider@Widget>:
+    size_hint_y: None
+    height: dp(1)
+    canvas:
+        Color:
+            rgba: app.c_line
+        Rectangle:
+            pos: self.pos
+            size: self.size
+
+<Card@MDCard>:
+    orientation: "vertical"
+    radius: [dp(18)]
+    md_bg_color: app.c_card
+    line_color: app.c_line
+    line_width: 1
+    elevation: 0
+
+<TopBar@MDBoxLayout>:
+    title: ""
+    target: "home"
+    size_hint_y: None
+    height: dp(56)
+    spacing: dp(4)
+    MDIconButton:
+        icon: "arrow-left"
+        theme_icon_color: "Custom"
+        icon_color: app.c_text
+        pos_hint: {"center_y": .5}
+        on_release: app.go(root.target)
+    TxtL:
+        text: root.title
+        font_style: "H6"
+        bold: True
+        pos_hint: {"center_y": .5}
+
+# =====================================================================
+#  Компоненты
+# =====================================================================
+<IconBadge>:
+    bg: app.c_soft
+    fg: app.c_accent
+    size_hint: None, None
+    size: dp(46), dp(46)
+    radius: [self.width / 2]
+    md_bg_color: root.bg
+    MDAnchorLayout:
+        Ico:
+            icon: root.icon
+            size: dp(24), dp(24)
+            font_size: root.width * 0.48
+            text_color: root.fg
+
+<Badge>:
+    text: ""
+    bg: app.c_soft
+    fg: app.c_accent
+    adaptive_size: True
+    padding: dp(10), dp(4)
+    radius: [dp(10)]
+    md_bg_color: root.bg
+    MDLabel:
+        text: root.text
+        font_style: "Caption"
+        bold: True
+        adaptive_size: True
+        theme_text_color: "Custom"
+        text_color: root.fg
+
+<Bar>:
+    size_hint_y: None
+    height: dp(8)
+    canvas:
+        Color:
+            rgba: app.c_soft
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(4)]
+        Color:
+            rgba: app.c_ok
+        RoundedRectangle:
+            pos: self.pos
+            size: self.width * root.pct, self.height
+            radius: [dp(4)]
+
+<Flag>:
+    size_hint: None, None
+    size: dp(42), dp(30)
+    canvas:
+        # Россия
+        Color:
+            rgba: 1, 1, 1, (1 if root.kind == "ru" else 0)
+        Rectangle:
+            pos: self.x, self.y + self.height * 2 / 3
+            size: self.width, self.height / 3
+        Color:
+            rgba: 0.0, 0.22, 0.65, (1 if root.kind == "ru" else 0)
+        Rectangle:
+            pos: self.x, self.y + self.height / 3
+            size: self.width, self.height / 3
+        Color:
+            rgba: 0.84, 0.16, 0.16, (1 if root.kind == "ru" else 0)
+        Rectangle:
+            pos: self.x, self.y
+            size: self.width, self.height / 3
+        # Армения
+        Color:
+            rgba: 0.85, 0.0, 0.1, (1 if root.kind == "hy" else 0)
+        Rectangle:
+            pos: self.x, self.y + self.height * 2 / 3
+            size: self.width, self.height / 3
+        Color:
+            rgba: 0.0, 0.2, 0.65, (1 if root.kind == "hy" else 0)
+        Rectangle:
+            pos: self.x, self.y + self.height / 3
+            size: self.width, self.height / 3
+        Color:
+            rgba: 0.95, 0.63, 0.0, (1 if root.kind == "hy" else 0)
+        Rectangle:
+            pos: self.x, self.y
+            size: self.width, self.height / 3
+        # Великобритания
+        Color:
+            rgba: 0.0, 0.14, 0.49, (1 if root.kind == "en" else 0)
+        Rectangle:
+            pos: self.pos
+            size: self.size
+        Color:
+            rgba: 1, 1, 1, (1 if root.kind == "en" else 0)
+        Line:
+            points: self.x, self.y, self.right, self.top
+            width: dp(3.2)
+        Line:
+            points: self.x, self.top, self.right, self.y
+            width: dp(3.2)
+        Color:
+            rgba: 0.8, 0.07, 0.17, (1 if root.kind == "en" else 0)
+        Line:
+            points: self.x, self.y, self.right, self.top
+            width: dp(1.1)
+        Line:
+            points: self.x, self.top, self.right, self.y
+            width: dp(1.1)
+        Color:
+            rgba: 1, 1, 1, (1 if root.kind == "en" else 0)
+        Rectangle:
+            pos: self.x, self.center_y - self.height * 0.17
+            size: self.width, self.height * 0.34
+        Rectangle:
+            pos: self.center_x - self.width * 0.12, self.y
+            size: self.width * 0.24, self.height
+        Color:
+            rgba: 0.8, 0.07, 0.17, (1 if root.kind == "en" else 0)
+        Rectangle:
+            pos: self.x, self.center_y - self.height * 0.1
+            size: self.width, self.height * 0.2
+        Rectangle:
+            pos: self.center_x - self.width * 0.07, self.y
+            size: self.width * 0.14, self.height
+        # тонкая рамка
+        Color:
+            rgba: 0, 0, 0, 0.14
+        Line:
+            rectangle: self.x, self.y, self.width, self.height
+            width: 1
+
+<ThemePrev@Widget>:
+    bg: 1, 1, 1, 1
+    fg: 1, 1, 1, 1
+    ac: 0.055, 0.435, 0.47, 1
+    canvas:
+        Color:
+            rgba: root.bg
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(12)]
+        Color:
+            rgba: root.ac
+        RoundedRectangle:
+            pos: self.x + dp(10), self.top - dp(20)
+            size: dp(34), dp(8)
+            radius: [dp(4)]
+        Color:
+            rgba: root.fg
+        RoundedRectangle:
+            pos: self.x + dp(8), self.top - dp(58)
+            size: self.width - dp(16), dp(30)
+            radius: [dp(8)]
+        RoundedRectangle:
+            pos: self.x + dp(8), self.top - dp(94)
+            size: self.width - dp(16), dp(30)
+            radius: [dp(8)]
+        RoundedRectangle:
+            pos: self.x + dp(8), self.top - dp(130)
+            size: self.width - dp(16), dp(30)
+            radius: [dp(8)]
+
+<Row>:
+    orientation: "horizontal"
+    size_hint_y: None
+    height: dp(64) if root.sub else dp(60)
+    padding: dp(12), dp(8)
+    spacing: dp(12)
+    radius: [dp(18)]
+    md_bg_color: app.c_card
+    line_color: app.c_line
+    line_width: 1
+    elevation: 0
+    IconBadge:
+        icon: root.icon
+        bg: [root.tint[0], root.tint[1], root.tint[2], 0.14]
+        fg: root.tint
+        size: dp(44), dp(44)
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_x: 1
+        size_hint_y: None
+        height: self.minimum_height
+        spacing: dp(3)
+        pos_hint: {"center_y": .5}
+        TxtL:
+            text: root.text
+            bold: True
+            font_size: "14sp"
+            size_hint_y: None
+            height: self.texture_size[1] + dp(3)
+            text_size: self.width, None
+            valign: "middle"
+        SubL:
+            text: root.sub
+            font_style: "Caption"
+            size_hint_y: None
+            height: self.texture_size[1] + dp(2) if root.sub else 0
+            opacity: 1 if root.sub else 0
+            text_size: self.width, None
+            valign: "middle"
+    Ico:
+        icon: "chevron-right"
+        size_hint: None, None
+        size: dp(24), dp(24)
+        font_size: "22sp"
+        text_color: app.c_sub
+        pos_hint: {"center_y": .5}
+
+<Bubble>:
+    orientation: "vertical"
+    size_hint: .88, None
+    adaptive_height: True
+    padding: dp(14), dp(10)
+    radius: [dp(18)]
+    md_bg_color: (1, 0.93, 0.9, 1) if root.alert else (app.c_accent if root.mine else app.c_card)
+    line_color: app.c_err if root.alert else app.c_line
+    line_width: 1
+    elevation: 0
+    pos_hint: {"right": 1} if root.mine else {"x": 0}
+    MDLabel:
+        text: root.text
+        adaptive_height: True
+        font_size: "17sp"
+        theme_text_color: "Custom"
+        text_color: (0.35, 0.08, 0.06, 1) if root.alert else (app.c_on_primary if root.mine else app.c_text)
+
+<DrugRow>:
+    orientation: "horizontal"
+    size_hint_y: None
+    height: dp(74)
+    padding: dp(14), dp(8)
+    spacing: dp(14)
+    radius: [dp(20)]
+    md_bg_color: app.c_card
+    line_color: app.c_line
+    line_width: 1
+    elevation: 0
+    IconBadge:
+        icon: "pill"
+        bg: app.c_soft
+        fg: app.c_accent
+        pos_hint: {"center_y": .5}
+    MDBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        pos_hint: {"center_y": .5}
+        TxtL:
+            text: root.title
+            bold: True
+        SubL:
+            text: root.sub
+            font_style: "Caption"
+    Ico:
+        icon: "shield-check" if root.who else ""
+        size: dp(24), dp(24)
+        pos_hint: {"center_y": .5}
+        text_color: app.c_ok
+    Ico:
+        icon: "chevron-right"
+        size: dp(24), dp(24)
+        pos_hint: {"center_y": .5}
+        text_color: app.c_sub
+
+<DoseRow>:
+    orientation: "horizontal"
+    size_hint_y: None
+    height: dp(80)
+    spacing: dp(10)
+    MDCard:
+        orientation: "vertical"
+        size_hint_x: None
+        width: dp(64)
+        padding: dp(4), dp(10)
+        spacing: dp(2)
+        md_bg_color: app.c_soft
+        radius: [dp(16)]
+        elevation: 0
+        MDLabel:
+            text: root.time
+            halign: "center"
+            valign: "middle"
+            bold: True
+            theme_text_color: "Custom"
+            text_color: app.c_text
+        Ico:
+            icon: root.chip_icon
+            size_hint: 1, None
+            height: dp(22)
+            font_size: "18sp"
+            text_color: app.c_sub
+    Card:
+        orientation: "horizontal"
+        padding: dp(14), 0, dp(4), 0
+        on_release: root.dispatch("on_open")
+        MDBoxLayout:
+            orientation: "vertical"
+            adaptive_height: True
+            pos_hint: {"center_y": .5}
+            SubL:
+                text: root.period
+                font_style: "Caption"
+            TxtL:
+                text: root.title
+                bold: True
+            SubL:
+                text: root.sub
+                font_style: "Caption"
+        MDIconButton:
+            icon: "check-circle" if root.state == "taken" else ("alert-circle-outline" if root.state == "missed" else "circle-outline")
+            theme_icon_color: "Custom"
+            icon_color: app.c_ok if root.state == "taken" else (app.c_err if root.state == "missed" else app.c_sub)
+            pos_hint: {"center_y": .5}
+            on_release: root.dispatch("on_toggle")
+
+<DayCell>:
+    orientation: "vertical"
+    spacing: dp(4)
+    SubL:
+        text: root.wd
+        halign: "center"
+        font_style: "Caption"
+    MDCard:
+        size_hint: None, None
+        size: dp(38), dp(38)
+        pos_hint: {"center_x": .5}
+        radius: [dp(19)]
+        md_bg_color: app.c_accent if root.sel else (0, 0, 0, 0)
+        line_color: app.c_accent if root.today and not root.sel else (0, 0, 0, 0)
+        line_width: 1.5
+        elevation: 0
+        # внутренняя карточка сама ловит касания — передаём их ячейке дня
+        on_release: root.dispatch("on_release")
+        MDLabel:
+            text: root.num
+            halign: "center"
+            valign: "middle"
+            bold: root.sel or root.today
+            theme_text_color: "Custom"
+            text_color: app.c_on_primary if root.sel else app.c_text
+    Widget:
+        size_hint: None, None
+        size: dp(7), dp(7)
+        pos_hint: {"center_x": .5}
+        canvas:
+            Color:
+                rgba: (app.c_ok if root.mark == "done" else (app.c_err if root.mark == "missed" else app.c_accent)) if root.mark else (0, 0, 0, 0)
+            Ellipse:
+                pos: self.pos
+                size: self.size
+
+<NavItem>:
+    orientation: "vertical"
+    size_hint_x: 1
+    size_hint_y: 1
+    padding: dp(2), dp(6), dp(2), dp(4)
+    spacing: dp(2)
+    MDAnchorLayout:
+        size_hint_y: None
+        height: dp(28)
+        Ico:
+            icon: root.icon
+            size: dp(28), dp(28)
+            font_size: "24sp"
+            text_color: app.c_accent if app.tab == root.target else app.c_sub
+    MDLabel:
+        text: root.text
+        halign: "center"
+        valign: "middle"
+        font_size: "11sp"
+        bold: app.tab == root.target
+        size_hint_y: None
+        height: dp(20)
+        theme_text_color: "Custom"
+        text_color: app.c_accent if app.tab == root.target else app.c_sub
+
+<TimeChip>:
+    size_hint: None, None
+    size: dp(112), dp(40)
+    radius: [dp(20)]
+    md_bg_color: app.c_soft
+    elevation: 0
+    MDLabel:
+        text: root.text
+        halign: "center"
+        theme_text_color: "Custom"
+        text_color: app.c_text
+
+<Sel@MDCard>:
+    orientation: "horizontal"
+    label: ""
+    value: ""
+    size_hint_y: None
+    height: dp(62)
+    padding: dp(16), 0
+    radius: [dp(16)]
+    md_bg_color: app.c_card
+    line_color: app.c_line
+    line_width: 1
+    elevation: 0
+    MDBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        pos_hint: {"center_y": .5}
+        SubL:
+            text: root.label
+            font_style: "Caption"
+            size_hint_y: None
+            height: self.texture_size[1] if root.label else 0
+            opacity: 1 if root.label else 0
+        TxtL:
+            text: root.value
+            text_size: self.width, None
+    Ico:
+        icon: "menu-down"
+        size: dp(28), dp(28)
+        pos_hint: {"center_y": .5}
+        text_color: app.c_sub
+
+<SwRow@MDCard>:
+    orientation: "horizontal"
+    text: ""
+    key: ""
+    icon: ""
+    active: False
+    size_hint_y: None
+    height: dp(62)
+    padding: dp(16), 0, dp(32), 0
+    spacing: dp(12)
+    radius: [dp(18)]
+    md_bg_color: app.c_card
+    line_color: app.c_line
+    line_width: 1
+    elevation: 0
+    Ico:
+        icon: root.icon
+        size: (dp(26), dp(26)) if root.icon else (0, 0)
+        pos_hint: {"center_y": .5}
+        text_color: app.c_accent
+    TxtL:
+        text: root.text
+        pos_hint: {"center_y": .5}
+    MDSwitch:
+        widget_style: "ios"
+        active: root.active
+        disabled: (root.key != "all" and not app.n_all) or (root.key == "bg" and not app.background_supported)
+        pos_hint: {"center_y": .5}
+        on_active: app.set_n(root.key, self.active)
+
+<LangRow@MDCard>:
+    orientation: "horizontal"
+    code: ""
+    name: ""
+    lang: ""
+    size_hint_y: None
+    height: dp(68)
+    padding: dp(16), 0
+    spacing: dp(16)
+    radius: [dp(20)]
+    md_bg_color: app.c_card
+    line_color: app.c_accent if app.lang == root.lang else app.c_line
+    line_width: 1.6 if app.lang == root.lang else 1
+    elevation: 0
+    on_release: app.set_lang(root.lang)
+    SubL:
+        text: root.code.upper()
+        bold: True
+        size_hint: None, None
+        size: dp(32), dp(24)
+        halign: "center"
+        valign: "middle"
+        pos_hint: {"center_y": .5}
+    TxtL:
+        text: root.name
+        bold: True
+        pos_hint: {"center_y": .5}
+    Ico:
+        icon: "check-circle" if app.lang == root.lang else "circle-outline"
+        size: dp(30), dp(30)
+        font_size: "26sp"
+        pos_hint: {"center_y": .5}
+        text_color: app.c_accent if app.lang == root.lang else app.c_sub
+
+<ThemeCard@MDCard>:
+    key: ""
+    text: ""
+    bg: 1, 1, 1, 1
+    fg: 1, 1, 1, 1
+    orientation: "vertical"
+    padding: dp(6)
+    spacing: dp(6)
+    size_hint_y: None
+    height: dp(190)
+    radius: [dp(18)]
+    md_bg_color: app.c_card
+    line_color: app.c_accent if app.theme == root.key else app.c_line
+    line_width: 2 if app.theme == root.key else 1
+    elevation: 0
+    on_release: app.set_theme(root.key)
+    ThemePrev:
+        bg: root.bg
+        fg: root.fg
+    TxtL:
+        text: root.text
+        halign: "center"
+        font_style: "Caption"
+        bold: app.theme == root.key
+
+<InfoRow@MDBoxLayout>:
+    icon: "information-outline"
+    title: ""
+    text: ""
+    tint: app.c_accent
+    adaptive_height: True
+    spacing: dp(12)
+    padding: 0, dp(10)
+    IconBadge:
+        icon: root.icon
+        size: dp(36), dp(36)
+        bg: app.c_soft
+        fg: root.tint
+    MDBoxLayout:
+        orientation: "vertical"
+        adaptive_height: True
+        spacing: dp(2)
+        SubL:
+            text: root.title
+            font_style: "Caption"
+        TxtL:
+            text: root.text
+
+# =====================================================================
+#  Окно напоминания (экран 9)
+# =====================================================================
+<DosePopup>:
+    size_hint: .88, None
+    height: dp(340)
+    background: ""
+    background_color: 0, 0, 0, 0
+    overlay_color: 0.05, 0.1, 0.18, 0.62
+    auto_dismiss: False
+    MDCard:
+        orientation: "vertical"
+        padding: dp(22)
+        spacing: dp(10)
+        radius: [dp(28)]
+        md_bg_color: app.c_card
+        elevation: 0
+        MDCard:
+            orientation: "vertical"
+            size_hint: None, None
+            size: dp(92), dp(92)
+            pos_hint: {"center_x": .5}
+            md_bg_color: app.c_soft
+            radius: [dp(46)]
+            elevation: 0
+            MDAnchorLayout:
+                Ico:
+                    icon: "pill"
+                    size: dp(44), dp(44)
+                    font_size: "44sp"
+                    text_color: app.c_ok
+        TxtL:
+            text: root.title
+            font_style: "H6"
+            bold: True
+            halign: "center"
+        TxtL:
+            text: root.med
+            bold: True
+            halign: "center"
+        SubL:
+            text: root.sub
+            halign: "center"
+        Widget:
+        BtnAccent:
+            text: app.t["taken"]
+            on_release: app.popup_action(root, "take")
+        BtnSoft:
+            text: app.t["snooze"]
+            on_release: app.popup_action(root, "snooze")
+
+# =====================================================================
+#  Корень
+# =====================================================================
+MDBoxLayout:
+    orientation: "vertical"
+    md_bg_color: app.c_bg
+    # Safe Area: не заходим под строку состояния, вырез камеры и панель навигации (Android 15+)
+    padding: app.inset_left, app.inset_top, app.inset_right, app.inset_bottom
+
+    ScreenManager:
+        id: sm
+        transition: NoTransition()
+
+        # 1. Стартовый экран ------------------------------------------
+        Scr:
+            name: "splash"
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(28), dp(28), dp(28), dp(32)
+                spacing: dp(12)
+                Widget:
+                Image:
+                    source: app.pills
+                    size_hint: None, None
+                    size: dp(132), dp(126)
+                    pos_hint: {"center_x": .5}
+                TxtL:
+                    text: "MediCare"
+                    font_style: "H4"
+                    bold: True
+                    halign: "center"
+                SubL:
+                    text: app.t["app_sub"]
+                    font_size: "16sp"
+                    halign: "center"
+                Widget:
+                Btn:
+                    id: start_btn
+                    text: app.t["start"]
+                    on_release: app.continue_from_splash()
+
+        # 2. Выбор языка ----------------------------------------------
+        Scr:
+            name: "lang"
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(24), dp(24), dp(24), dp(32)
+                spacing: dp(14)
+                Widget:
+                    size_hint_y: None
+                    height: dp(36)
+                TxtL:
+                    text: app.t["choose_lang"]
+                    font_style: "H4"
+                    bold: True
+                SubL:
+                    text: app.t["choose_lang_sub"]
+                Widget:
+                    size_hint_y: None
+                    height: dp(8)
+                LangRow:
+                    code: "ru"
+                    name: "Русский"
+                    lang: "ru"
+                LangRow:
+                    code: "en"
+                    name: "English"
+                    lang: "en"
+                LangRow:
+                    code: "hy"
+                    name: "Հայերեն"
+                    lang: "hy"
+                Widget:
+                Btn:
+                    text: app.t["next"]
+                    on_release: app.finish_onboarding()
+
+        # 3. Главный экран --------------------------------------------
+        Scr:
+            name: "home"
+            on_pre_enter: app.refresh("home")
+            MDScrollView:
+                MDBoxLayout:
+                    orientation: "vertical"
+                    adaptive_height: True
+                    padding: dp(16), dp(14), dp(16), dp(22)
+                    spacing: dp(12)
+                    MDBoxLayout:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(8)
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            size_hint_y: None
+                            height: self.minimum_height
+                            spacing: dp(1)
+                            TxtL:
+                                text: app.greet
+                                bold: True
+                                font_style: "H6"
+                            TxtL:
+                                text: app.uname
+                                font_style: "H5"
+                                bold: True
+                            SubL:
+                                text: app.date_text
+                                font_style: "Caption"
+                        MDCard:
+                            orientation: "vertical"
+                            size_hint: None, None
+                            size: dp(52), dp(52)
+                            radius: [dp(26)]
+                            md_bg_color: app.c_accent
+                            elevation: 0
+                            on_release: app.go("profile")
+                            MDLabel:
+                                text: app.avatar_letter
+                                halign: "center"
+                                valign: "middle"
+                                bold: True
+                                font_style: "H6"
+                                theme_text_color: "Custom"
+                                text_color: app.c_on_primary
+                                pos_hint: {"center_x": .5, "center_y": .5}
+                    Card:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        padding: dp(20)
+                        spacing: dp(6)
+                        radius: [dp(24)]
+                        md_bg_color: app.c_primary
+                        line_width: 0
+                        SubL:
+                            text: app.t["next_dose"]
+                            font_style: "Caption"
+                            text_color: app.c_on_primary[0], app.c_on_primary[1], app.c_on_primary[2], 0.8
+                            size_hint_y: None
+                            height: self.texture_size[1] + dp(2)
+                            text_size: self.width, None
+                        TxtL:
+                            text: app.next_title
+                            font_style: "H5"
+                            bold: True
+                            text_color: app.c_on_primary
+                            size_hint_y: None
+                            height: self.texture_size[1] + dp(2)
+                            text_size: self.width, None
+                        SubL:
+                            text: app.next_sub
+                            font_size: "16sp"
+                            text_color: app.c_on_primary[0], app.c_on_primary[1], app.c_on_primary[2], 0.9
+                            opacity: 1 if app.next_sub else 0
+                            size_hint_y: None
+                            height: self.texture_size[1] + dp(2) if app.next_sub else 0
+                            text_size: self.width, None
+                        Widget:
+                            size_hint_y: None
+                            height: dp(10)
+                        Btn:
+                            text: app.t["show_all"]
+                            height: dp(46)
+                            md_bg_color: app.c_on_primary
+                            text_color: app.c_primary
+                            on_release: app.go("schedule")
+                    Card:
+                        size_hint_y: None
+                        height: self.minimum_height
+                        padding: dp(16)
+                        spacing: dp(8)
+                        radius: [dp(20)]
+                        TxtL:
+                            text: app.t["progress"]
+                            bold: True
+                            size_hint_y: None
+                            height: self.texture_size[1] + dp(2)
+                            text_size: self.width, None
+                        Bar:
+                            pct: app.home_pct
+                        SubL:
+                            text: app.home_stat
+                            font_style: "Caption"
+                            size_hint_y: None
+                            height: self.texture_size[1] + dp(2)
+                            text_size: self.width, None
+                        SubL:
+                            text: app.streak_text
+                            font_style: "Caption"
+                    Row:
+                        icon: "plus-circle-outline"
+                        text: app.t["add_med"]
+                        tint: app.c_accent
+                        on_release: app.new_med()
+                    Row:
+                        icon: "message-text-outline"
+                        text: app.t["ai_assistant"]
+                        sub: app.t["ai_assistant_sub"]
+                        tint: app.c_accent
+                        on_release: app.go("assistant")
+                    Row:
+                        icon: "bell-outline"
+                        text: app.t["notifications"]
+                        tint: app.c_accent
+                        on_release: app.go("notif")
+
+        # 4. Расписание дня -------------------------------------------
+        Scr:
+            name: "schedule"
+            on_pre_enter: app.refresh("schedule")
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(16), dp(8), dp(16), 0
+                spacing: dp(10)
+                TopBar:
+                    title: app.t["day_schedule"]
+                    target: "home"
+                SubL:
+                    text: app.sel_text
+                    font_style: "Caption"
+                MDBoxLayout:
+                    size_hint_y: None
+                    height: dp(42)
+                    MDIconButton:
+                        icon: "chevron-left"
+                        on_release: app.shift_week(-1)
+                    BtnSoft:
+                        text: app.t["today_short"]
+                        height: dp(40)
+                        on_release: app.today_schedule()
+                    MDIconButton:
+                        icon: "chevron-right"
+                        on_release: app.shift_week(1)
+                Card:
+                    size_hint_y: None
+                    height: dp(96)
+                    padding: dp(6)
+                    MDBoxLayout:
+                        id: week
+                MDScrollView:
+                    MDBoxLayout:
+                        id: dose_list
+                        orientation: "vertical"
+                        adaptive_height: True
+                        spacing: dp(10)
+                        padding: 0, dp(4), 0, dp(12)
+                SubL:
+                    text: app.sel_stat
+                    font_style: "Caption"
+                    size_hint_y: None
+                    height: dp(26)
+
+        # Мои лекарства (вкладка) -------------------------------------
+        Scr:
+            name: "meds"
+            on_pre_enter: app.refresh("meds")
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(16), dp(8), dp(16), dp(12)
+                spacing: dp(10)
+                TopBar:
+                    title: app.t["my_meds"]
+                    target: "home"
+                F:
+                    id: med_search
+                    hint_text: app.t["search_meds"]
+                    on_text: app.refresh("meds")
+                MDScrollView:
+                    MDBoxLayout:
+                        id: med_list
+                        orientation: "vertical"
+                        adaptive_height: True
+                        spacing: dp(10)
+                        padding: 0, dp(4), 0, dp(12)
+                BtnSoft:
+                    text: app.t["reference"]
+                    on_release: app.go("lib")
+                Btn:
+                    text: app.t["add_med"]
+                    on_release: app.new_med()
+
+        # 5. Детали лекарства -----------------------------------------
+        Scr:
+            name: "detail"
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(16), dp(8), dp(16), dp(12)
+                spacing: dp(10)
+                TopBar:
+                    title: app.t["details"]
+                    target: app.detail_back
+                MDScrollView:
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        adaptive_height: True
+                        spacing: dp(12)
+                        padding: 0, dp(4), 0, dp(8)
+                        Card:
+                            adaptive_height: True
+                            padding: dp(18), dp(14)
+                            spacing: dp(4)
+                            radius: [dp(24)]
+                            MDBoxLayout:
+                                adaptive_height: True
+                                spacing: dp(16)
+                                padding: 0, 0, 0, dp(8)
+                                Image:
+                                    source: app.d_img
+                                    size_hint: None, None
+                                    size: dp(72), dp(72)
+                                MDBoxLayout:
+                                    orientation: "vertical"
+                                    adaptive_height: True
+                                    pos_hint: {"center_y": .5}
+                                    TxtL:
+                                        text: app.d_title
+                                        font_style: "H6"
+                                        bold: True
+                                    SubL:
+                                        text: app.d_sub
+                            Divider:
+                            InfoRow:
+                                icon: "food-apple-outline"
+                                title: app.t["how_to"]
+                                text: app.d_how
+                            Divider:
+                            InfoRow:
+                                icon: "clock-outline"
+                                title: app.t["intake_time"]
+                                text: app.d_times
+                            Divider:
+                            InfoRow:
+                                icon: "calendar-range"
+                                title: app.t["course_t"]
+                                text: app.d_course
+                            Divider:
+                            InfoRow:
+                                icon: "heart-pulse"
+                                title: app.t["purpose"]
+                                text: app.d_purpose
+                        Btn:
+                            text: app.t["open_instr"]
+                            on_release: app.show_instruction()
+                        BtnAccent:
+                            text: app.t["standards"]
+                            opacity: 1 if app.has_std else 0
+                            disabled: not app.has_std
+                            height: dp(54) if app.has_std else 0
+                            on_release: app.open_standards()
+                        BtnSoft:
+                            text: app.t["edit"]
+                            on_release: app.edit_med()
+                        BtnDanger:
+                            text: app.t["delete"]
+                            on_release: app.delete_med()
+
+        # 6. Добавление лекарства -------------------------------------
+        Scr:
+            name: "add"
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(16), dp(8), dp(16), dp(12)
+                spacing: dp(8)
+                TopBar:
+                    title: app.add_title
+                    target: app.add_back
+                MDScrollView:
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        adaptive_height: True
+                        spacing: dp(10)
+                        padding: 0, dp(4), 0, dp(8)
+                        MDCard:
+                            size_hint: None, None
+                            size: dp(88), dp(88)
+                            radius: [dp(44)]
+                            md_bg_color: app.c_soft
+                            elevation: 0
+                            pos_hint: {"center_x": .5}
+                            on_release: app.pick_photo()
+                            MDFloatLayout:
+                                Ico:
+                                    icon: "camera-outline"
+                                    size: dp(88), dp(88)
+                                    font_size: "34sp"
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                                    text_color: app.c_accent
+                                Image:
+                                    source: app.add_photo
+                                    opacity: 1 if app.add_photo else 0
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                                    size_hint: 1, 1
+                        SubL:
+                            text: app.t["add_photo"] + " " + app.t["optional"]
+                            halign: "center"
+                            font_style: "Caption"
+                        BtnSoft:
+                            text: app.t["from_db"]
+                            height: dp(46)
+                            on_release: app.pick_db(self)
+                        FieldL:
+                            text: app.t["lbl_name"]
+                        F:
+                            id: name_f
+                            hint_text: app.t["ph_name"]
+                        FieldL:
+                            text: app.t["lbl_dose"]
+                        F:
+                            id: dose_f
+                            hint_text: app.t["ph_dose"]
+                        FieldL:
+                            text: app.t["lbl_form"]
+                        Sel:
+                            label: ""
+                            value: app.add_form_text
+                            on_release: app.pick_form(self)
+                        FieldL:
+                            text: app.t["lbl_how"]
+                        Sel:
+                            label: ""
+                            value: app.add_how_text
+                            on_release: app.pick_how(self)
+                        FieldL:
+                            text: app.t["times"]
+                        MDStackLayout:
+                            id: times_box
+                            adaptive_height: True
+                            spacing: dp(8)
+                        BtnSoft:
+                            text: "+ " + app.t["add_time"]
+                            height: dp(44)
+                            on_release: app.add_time()
+                        FieldL:
+                            text: app.t["course"]
+                        F:
+                            id: course_f
+                            hint_text: "7"
+                            input_filter: "int"
+                        FieldL:
+                            text: app.t["note"]
+                        F:
+                            id: note_f
+                            hint_text: app.t["note"]
+                Btn:
+                    text: app.t["save"]
+                    on_release: app.save_med()
+
+        # 7. Настройки уведомлений ------------------------------------
+        Scr:
+            name: "notif"
+            on_pre_enter: app.refresh("notif")
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(16), dp(8), dp(16), dp(12)
+                spacing: dp(10)
+                TopBar:
+                    title: app.t["notifications"]
+                    target: "home"
+                MDScrollView:
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        adaptive_height: True
+                        spacing: dp(10)
+                        padding: 0, 0, 0, dp(12)
+                        SwRow:
+                            text: app.t["n_enable"]
+                            key: "all"
+                            active: app.n_all
+                            icon: "bell-outline"
+                        FieldL:
+                            text: app.t["n_methods"]
+                        SwRow:
+                            text: app.t["n_push"]
+                            key: "push"
+                            active: app.n_push
+                            icon: "bell-ring-outline"
+                        SwRow:
+                            text: app.t["n_sound"]
+                            key: "sound"
+                            active: app.n_sound
+                            icon: "volume-high"
+                        SwRow:
+                            text: app.t["n_vib"]
+                            key: "vib"
+                            active: app.n_vib
+                            icon: "vibrate"
+                        FieldL:
+                            text: app.t["n_extra"]
+                        SwRow:
+                            text: app.t["n_bg"]
+                            key: "bg"
+                            active: app.n_bg
+                            height: dp(88)
+                        SwRow:
+                            text: app.t["n_quiet"]
+                            key: "quiet"
+                            active: app.n_quiet
+                            height: dp(76)
+                        SubL:
+                            text: app.perm_warn
+                            font_style: "Caption"
+                        MDLabel:
+                            text: app.t["today_reminders"]
+                            bold: True
+                            adaptive_height: True
+                            theme_text_color: "Custom"
+                            text_color: app.c_text
+                        MDBoxLayout:
+                            id: notif_list
+                            orientation: "vertical"
+                            adaptive_height: True
+                            spacing: dp(10)
+
+        # 8. Профиль --------------------------------------------------
+        Scr:
+            name: "profile"
+            on_pre_enter: app.refresh("profile")
+            MDScrollView:
+                MDBoxLayout:
+                    orientation: "vertical"
+                    adaptive_height: True
+                    padding: dp(20), dp(24), dp(20), dp(16)
+                    spacing: dp(12)
+                    TxtL:
+                        text: app.t["profile"]
+                        font_style: "H5"
+                        bold: True
+                    MDBoxLayout:
+                        adaptive_height: True
+                        spacing: dp(16)
+                        padding: 0, dp(8)
+                        MDCard:
+                            orientation: "vertical"
+                            size_hint: None, None
+                            size: dp(76), dp(76)
+                            radius: [dp(38)]
+                            md_bg_color: app.c_accent
+                            elevation: 0
+                            MDLabel:
+                                text: app.avatar_letter
+                                halign: "center"
+                                valign: "middle"
+                                font_style: "H4"
+                                theme_text_color: "Custom"
+                                text_color: app.c_on_primary
+                                pos_hint: {"center_x": .5, "center_y": .5}
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            adaptive_height: True
+                            pos_hint: {"center_y": .5}
+                            TxtL:
+                                text: app.uname
+                                font_style: "H6"
+                                bold: True
+                            SubL:
+                                text: app.email_text
+                    Row:
+                        icon: "account-outline"
+                        text: app.t["personal"]
+                        tint: app.c_accent
+                        on_release: app.edit_profile()
+                    Row:
+                        icon: "tune-variant"
+                        text: app.t["app_lang"] + " · " + app.t["theme"]
+                        sub: app.lang_name + " · " + app.theme_name
+                        tint: app.c_accent
+                        on_release: app.go("theme")
+                    Row:
+                        icon: "book-open-variant"
+                        text: app.t["reference"]
+                        tint: app.c_ok
+                        on_release: app.go("lib")
+                    Row:
+                        icon: "help-circle-outline"
+                        text: app.t["help"]
+                        tint: app.c_accent
+                        on_release: app.show_text("help_text")
+                    Row:
+                        icon: "information-outline"
+                        text: app.t["about"]
+                        tint: app.c_accent
+                        on_release: app.show_text("about_text")
+                    Row:
+                        icon: "delete-outline"
+                        text: app.t["wipe_row"]
+                        tint: app.c_err
+                        on_release: app.confirm_wipe()
+
+        # 10. Тема и язык ---------------------------------------------
+        Scr:
+            name: "theme"
+            on_pre_enter: app.refresh("theme")
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(16), dp(8), dp(16), dp(12)
+                spacing: dp(12)
+                TopBar:
+                    title: app.t["th_title"]
+                    target: "profile"
+                FieldL:
+                    text: app.t["choose_theme"]
+                MDBoxLayout:
+                    size_hint_y: None
+                    height: dp(190)
+                    spacing: dp(10)
+                    ThemeCard:
+                        key: "light"
+                        text: app.t["th_light"]
+                        bg: 0.96, 0.97, 0.98, 1
+                        fg: 1, 1, 1, 1
+                    ThemeCard:
+                        key: "dark"
+                        text: app.t["th_dark"]
+                        bg: 0.055, 0.078, 0.09, 1
+                        fg: 0.09, 0.125, 0.15, 1
+                FieldL:
+                    text: app.t["language"]
+                LangRow:
+                    code: "ru"
+                    name: "Русский"
+                    lang: "ru"
+                LangRow:
+                    code: "en"
+                    name: "English"
+                    lang: "en"
+                LangRow:
+                    code: "hy"
+                    name: "Հայերեն"
+                    lang: "hy"
+                Widget:
+
+        # 11. Справочник лекарств -------------------------------------
+        Scr:
+            name: "lib"
+            on_pre_enter: app.refresh("lib")
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(16), dp(8), dp(16), dp(8)
+                spacing: dp(10)
+                TopBar:
+                    title: app.t["reference"]
+                    target: "home"
+                SubL:
+                    text: app.t["reference_sub"]
+                    font_style: "Caption"
+                F:
+                    id: lib_search
+                    hint_text: app.t["search_hint"]
+                    on_text: app.show_lib(self.text)
+                MDScrollView:
+                    MDBoxLayout:
+                        id: lib_list
+                        orientation: "vertical"
+                        adaptive_height: True
+                        spacing: dp(10)
+                        padding: 0, dp(4), 0, dp(12)
+
+        # 12. Карточка препарата со стандартами -----------------------
+        Scr:
+            name: "drug"
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(16), dp(8), dp(16), dp(12)
+                spacing: dp(10)
+                TopBar:
+                    title: app.t["standards"]
+                    target: app.lib_back
+                MDScrollView:
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        adaptive_height: True
+                        spacing: dp(12)
+                        padding: 0, dp(4), 0, dp(8)
+                        Card:
+                            adaptive_height: True
+                            padding: dp(18), dp(14)
+                            spacing: dp(6)
+                            radius: [dp(24)]
+                            MDBoxLayout:
+                                adaptive_height: True
+                                spacing: dp(14)
+                                padding: 0, 0, 0, dp(6)
+                                IconBadge:
+                                    icon: "pill"
+                                    size: dp(56), dp(56)
+                                MDBoxLayout:
+                                    orientation: "vertical"
+                                    adaptive_height: True
+                                    pos_hint: {"center_y": .5}
+                                    TxtL:
+                                        text: app.dr_title
+                                        font_style: "H6"
+                                        bold: True
+                                    SubL:
+                                        text: app.dr_sub
+                            MDStackLayout:
+                                id: dr_badges
+                                adaptive_height: True
+                                spacing: dp(6)
+                                padding: 0, dp(4), 0, dp(4)
+                            Divider:
+                            InfoRow:
+                                icon: "text-box-outline"
+                                title: app.t["indications"]
+                                text: app.dr_use
+                            Divider:
+                            InfoRow:
+                                icon: "pill"
+                                title: app.t["std_dose"]
+                                text: app.dr_dose
+                            Divider:
+                            InfoRow:
+                                icon: "alert-outline"
+                                title: app.t["max_dose"]
+                                text: app.dr_max
+                                tint: 0.92, 0.55, 0.1, 1
+                            Divider:
+                            InfoRow:
+                                icon: "close-octagon-outline"
+                                title: app.t["avoid"]
+                                text: app.dr_avoid
+                                tint: app.c_err
+                            Divider:
+                            InfoRow:
+                                icon: "swap-horizontal"
+                                title: app.t["interactions"]
+                                text: app.dr_inter
+                            Divider:
+                            InfoRow:
+                                icon: "thermometer"
+                                title: app.t["storage"]
+                                text: app.dr_store
+                                tint: app.c_ok
+                        Card:
+                            adaptive_height: True
+                            padding: dp(16)
+                            spacing: dp(6)
+                            FieldL:
+                                text: app.t["sources"]
+                            TxtL:
+                                text: app.dr_src
+                                font_style: "Caption"
+                            SubL:
+                                text: app.t["ref_disclaimer"]
+                                font_style: "Caption"
+                        BtnAccent:
+                            text: app.t["add_to_schedule"]
+                            on_release: app.drug_to_schedule()
+
+        # 13. AI-помощник ---------------------------------------------
+        Scr:
+            name: "assistant"
+            on_pre_enter: app.refresh("assistant")
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: dp(16), dp(8), dp(16), dp(12)
+                spacing: dp(8)
+                TopBar:
+                    title: app.t["ai_assistant"]
+                    target: "home"
+                SubL:
+                    text: app.t["asst_disclaimer"]
+                    font_style: "Caption"
+                MDScrollView:
+                    id: chat_scroll
+                    MDBoxLayout:
+                        id: chat_list
+                        orientation: "vertical"
+                        adaptive_height: True
+                        spacing: dp(10)
+                        padding: 0, dp(4), 0, dp(8)
+                SubL:
+                    text: app.asst_status
+                    font_style: "Caption"
+                    size_hint_y: None
+                    height: dp(20) if app.asst_status else 0
+                MDBoxLayout:
+                    size_hint_y: None
+                    height: dp(60)
+                    spacing: dp(8)
+                    BtnAccent:
+                        text: app.t["asst_speak"]
+                        height: dp(60)
+                        on_release: app.start_voice()
+                    BtnSoft:
+                        text: app.t["asst_check"]
+                        height: dp(60)
+                        on_release: app.send_chat(app.t["asst_check_cmd"])
+                MDBoxLayout:
+                    size_hint_y: None
+                    height: dp(56)
+                    spacing: dp(6)
+                    F:
+                        id: chat_input
+                        hint_text: app.t["asst_hint"]
+                        multiline: False
+                        on_text_validate: app.send_chat()
+                    MDIconButton:
+                        icon: "send"
+                        theme_icon_color: "Custom"
+                        icon_color: app.c_accent
+                        pos_hint: {"center_y": .5}
+                        on_release: app.send_chat()
+
+    # Нижняя навигация ------------------------------------------------
+    MDBoxLayout:
+        orientation: "vertical"
+        size_hint_y: None
+        height: dp(76) if app.show_nav else 0
+        opacity: 1 if app.show_nav else 0
+        disabled: not app.show_nav
+        md_bg_color: app.c_card
+        Divider:
+        MDBoxLayout:
+            NavItem:
+                icon: "home-outline"
+                text: app.t["nav_home"]
+                target: "home"
+                on_release: app.go("home")
+            NavItem:
+                icon: "calendar-month-outline"
+                text: app.t["nav_cal"]
+                target: "schedule"
+                on_release: app.go("schedule")
+            NavItem:
+                icon: "pill"
+                text: app.t["nav_meds"]
+                target: "meds"
+                on_release: app.go("meds")
+            NavItem:
+                icon: "account-outline"
+                text: app.t["nav_profile"]
+                target: "profile"
+                on_release: app.go("profile")
