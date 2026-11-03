@@ -1,4 +1,3 @@
-# Собирает APK в облаке GitHub. Запуск: вкладка Actions -> "Сборка APK" -> Run workflow.
 name: Сборка APK
 
 on:
@@ -6,20 +5,46 @@ on:
 
 jobs:
   build:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
+
     steps:
       - name: Скачать код
         uses: actions/checkout@v4
 
-      - name: Собрать APK (Buildozer)
-        uses: ArtemSBulgakov/buildozer-action@v1
-        id: buildozer
+      - name: Установить Java 17
+        uses: actions/setup-java@v4
         with:
-          command: buildozer android debug
-          buildozer_version: stable
+          distribution: temurin
+          java-version: '17'
+
+      - name: Установить системные зависимости
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y \
+            git zip unzip \
+            python3-pip python3-venv \
+            autoconf automake libtool \
+            pkg-config zlib1g-dev \
+            libncurses5-dev libncursesw5-dev \
+            libtinfo6 cmake \
+            libffi-dev libssl-dev
+
+      - name: Подготовить Python
+        run: |
+          python3 -m venv .venv
+          source .venv/bin/activate
+          pip install --upgrade pip setuptools wheel
+          pip install "Cython<3"
+          pip install git+https://github.com/kivy/buildozer.git@76bac285
+
+      - name: Собрать APK
+        run: |
+          source .venv/bin/activate
+          buildozer android debug
 
       - name: Сохранить APK
         uses: actions/upload-artifact@v4
         with:
           name: medicare-apk
-          path: ${{ steps.buildozer.outputs.filename }}
+          path: bin/*.apk
+          if-no-files-found: error
